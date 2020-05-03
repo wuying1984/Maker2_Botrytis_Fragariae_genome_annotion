@@ -1,4 +1,4 @@
-# MAKER2_PM_genome_annotation
+# MAKER2_B.Fragariae_genome_annotation
 ## Using MAKER2 FOR ANNOTATION OF FOUR DICOT PM genomes
 ### Reference to  https://gist.github.com/darencard/bb1001ac1532dd4225b030cf0cd61ce2
 ###             & https://github.com/CompSynBioLab-KoreaUniv/FunGAP#step1
@@ -133,7 +133,7 @@ run_BUSCO.py -i Bfra_R1V1.fa.all.maker.proteins.fasta  -l ~/program/BUSCO/ascomy
 ########using protein######
 perl /home/ywu/program_genome/gmes_linux_64/gmes_petap.pl  --seq ../Bfra_R1V1.fa.masked --EP --dbep ../../Evidence_files/Botrytis_protein/Bcin_B05.faa --fungus --verbose --cores=8 --soft_mask 2000 --min_contig 500 --max_intron 2000 1>gmes.e
 
-########using only genome########
+########using only genome; used in gene prediction gm########
 perl /home/ywu/program_genome/gmes_linux_64/gmes_petap.pl  --seq ../Bfra_R1V1.fa.masked --ES --fungus --verbose --cores=8 --soft_mask 2000 --min_contig 500 --max_intron 2000 1>gmes.e
 ```
 
@@ -142,6 +142,42 @@ gff3_merge -d Bfra_R1V1.fa_master_datastore_index.log
 fasta_merge -d Bfra_R1V1.fa_master_datastore_index.log
 run_BUSCO.py -i Bfra_R1V1.fa.all.maker.proteins.fasta  -l ~/program/BUSCO/ascomycota_odb9 -m prot -c 4 -o protein.busco.3rd >protein.busco.3rd.out
 ```
+
+# export 'confident' gene models from MAKER first round and rename to something meaningful
+maker2zff -x 0.25 -l 50 -d ../Bfra_R1V1.fa_master_datastore_index.log
+rename genome Bfra_R1V1_len50_aed0.25 genome.*
+##### gather some stats and validate
+`fathom Bfra_R1V1_len50_aed0.25.ann Bfra_R1V1_len50_aed0.25.dna -gene-stats > gene-stats.log 2>&1
+fathom Bfra_R1V1_len50_aed0.25.ann Bfra_R1V1_len50_aed0.25.dna  -validate > validate.log 2>&1`
+##### collect the training sequences and annotations, plus 1000 surrounding bp for training
+`fathom Bfra_R1V1_len50_aed0.25.ann Bfra_R1V1_len50_aed0.25.dna -categorize 1000 > categorize.log 2>&1
+fathom uni.ann uni.dna -export 1000 -plus > uni-plus.log 2>&1`
+##### create the training parameters
+```
+mkdir params
+cd params
+forge ../export.ann ../export.dna > ../forge.log 2>&1
+cd ..
+hmm-assembler.pl Bfra_R1V1_R3 params > Bfra_R1V1_R3.hmm
+```
+```
+gff3_merge -d Bfra_R1V1.fa_master_datastore_index.log
+fasta_merge -d Bfra_R1V1.fa_master_datastore_index.log
+run_BUSCO.py -i Bfra_R1V1.fa.all.maker.proteins.fasta  -l ~/program/BUSCO/ascomycota_odb9 -m prot -c 4 -o protein.busco.3rd_gm >protein.busco.3rd_gm.out
+```
+
+
+### 4)fourth round
+```
+gff3_merge -d Bfra_R1V1.fa_master_datastore_index.log
+fasta_merge -d Bfra_R1V1.fa_master_datastore_index.log
+run_BUSCO.py -i Bfra_R1V1.fa.all.maker.proteins.fasta  -l ~/program/BUSCO/ascomycota_odb9 -m prot -c 4 -o protein.busco.4th  >protein.busco.4th.out
+```
+##########rename all genes##########
+
+
+
+
 
 git status
 
