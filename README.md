@@ -174,7 +174,16 @@ fasta_merge -d Bfra_R1V1.fa_master_datastore_index.log
 run_BUSCO.py -i Bfra_R1V1.fa.all.maker.proteins.fasta  -l ~/program/BUSCO/ascomycota_odb9 -m prot -c 4 -o protein.busco.4th  >protein.busco.4th.out
 ```
 ##########rename all genes##########
+ maker_map_ids --prefix BFRA_ --justify 6  Bfra_R1V1.fa.all.gff > genome.all.id.map
+ map_fasta_ids genome.all.id.map Bfra_R1V1.fa.all.maker.proteins.fasta
+  map_fasta_ids genome.all.id.map Bfra_R1V1.fa.all.maker.transcripts.fasta
+  map_gff_ids genome.all.id.map Bfra_R1V1.fa.all.gff
+  
 
+
+
+
+http://gmod.org/wiki/MAKER_Tutorial_2013
 
 
 
