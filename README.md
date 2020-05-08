@@ -178,15 +178,21 @@ run_BUSCO.py -i Bfra_R1V1.fa.all.maker.proteins.fasta  -l ~/program/BUSCO/ascomy
  map_fasta_ids genome.all.id.map Bfra_R1V1.fa.all.maker.proteins.fasta
   map_fasta_ids genome.all.id.map Bfra_R1V1.fa.all.maker.transcripts.fasta
   map_gff_ids genome.all.id.map Bfra_R1V1.fa.all.gff
-  
+ 
+
 
 
 
 
 http://gmod.org/wiki/MAKER_Tutorial_2013
 
+### 4)get genes needed to be checked
+cat Bfra_R1V1.fa.all.gff | grep ^tig | awk '{print $_>"part."$2".gff"}'
+cat Bfra_R1V1.fa.all.gff | awk '$2=="maker"' | awk '$3=="gene"' | grep ^tig | awk '{print $_>"gene."$2".gff"}'
 
-
+for i in `echo repeatmasker est2genome protein2genome augustus `;
+	bedtools intersect -wo -a gene.maker.gff -b part.$i.gff | awk '{print $19/($5-$4+1)"\t"$_}' >intersect.$i.txt
+done
 
 git status
 
