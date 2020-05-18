@@ -1,0 +1,23 @@
+##### gff file used
+1./home/ywu/Xiaolab/Botrytis/Maker/maker/Bfra_R1V1.fa.maker.output/4th_result/intersection/modify_gff/output/Bfra_R1V1.fa.all_no_seq.modified.sorted.gff
+2.wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/143/535/GCF_000143535.2_ASM14353v4/GCF_000143535.2_ASM14353v4_genomic.gff.gz
+
+####genome file used
+1. wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/143/535/GCF_000143535.2_ASM14353v4/GCF_000143535.2_ASM14353v4_genomic.fna.gz
+  `c Bcin_B05.fna | sed 's#NC.*chromosome#Chr#;s#,.*##' >Bcin_B05.fasta`
+2./home/ywu/Xiaolab/Botrytis/Maker/Bfra_R1V1.fa
+
+#####format all the gff
+#####make sure the gene_ID in cds file is the same as the mRNA_ID
+c Bci_ensemble.gff| sed "s#gene:##g;s#transcript:##g;s#CDS:##g;s#Bcin01p#Bcin01g#" >Bci.gff
+c Bfra_R1V1.fa.all_no_seq.modified.sorted.gff| sed "s#-RA:cds##g;s#-RA##g;" >Bfra.gff
+
+####do jcvi
+```
+ ~/miniconda3/bin/python -m jcvi.formats.gff bed --type=mRNA Bfra.gff -o Bfra.bed
+ ~/miniconda3/bin/python -m jcvi.formats.gff bed --type=mRNA Bcin.gff -o Bcin.bed
+ 
+ ~/miniconda3/bin/python -m jcvi.compara.catalog ortholog Bfra Bcin --no_strip_names
+ ~/miniconda3/bin/python -m jcvi.compara.catalog ortholog Bfra Bcin --no_strip_names
+ ~/miniconda3/bin/python -m jcvi.graphics.dotplot Bfra.Bcin.lifted.anchors
+ ```
