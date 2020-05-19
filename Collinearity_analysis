@@ -19,5 +19,32 @@ c Bfra_R1V1.fa.all_no_seq.modified.sorted.gff| sed "s#-RA:cds##g;s#-RA##g;" >Bfr
  
  ~/miniconda3/bin/python -m jcvi.compara.catalog ortholog Bfra Bcin --no_strip_names
  ~/miniconda3/bin/python -m jcvi.compara.catalog ortholog Bfra Bcin --no_strip_names
- ~/miniconda3/bin/python -m jcvi.graphics.dotplot Bfra.Bcin.lifted.anchors
+ #########change order
+for i in `echo 1 5 7 9 11 12 13 16 17 19 20 24`;do cat Bfra.bed_replace| awk '$1=="'$i'"{print $1"\t-"$3"\t-"$2"\t"$4"\t"$5"\t"$6}'; done >Bfra.bed.1
+for i in `echo 2 3 4 6 8 10 14 15 18 21 22 23`;do cat Bfra.bed_replace| awk '$1=="'$i'"{print $_}'; done >Bfra.bed.2
+ c Bfra.bed.1 Bfra.bed.2 >Bfra.bed
+~/miniconda3/bin/python -m jcvi.compara.catalog ortholog Bcin Bfra --no_strip_names
+ 
+ 
+ ~/miniconda3/bin/python -m jcvi.graphics.dotplot Bfra.Bcin.anchors -o 
+ 
+ python -m jcvi.graphics.karyotype seqids2 layout_h --figsize 6x12
  ```
+ 
+ ##########layout_h 
+ #y,xstart,xend,rotation,color,label,va,bed
+0.3,0.2,0.2,90,,Bcin,top,Bcin.bed
+0.3,0.6,0.6,90,,Bfra,bottom,Bfra.bed
+# edges
+e,0,1,Bcin.Bfra.anchors.simple
+
+###########seqid
+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18
+tig00000000,tig00000001,tig00000006,tig00000012,tig00000037,tig00000045,tig00000050,tig00000054,tig00000061,tig00000075,tig00000101,tig00000112,tig00000161,tig00000163,tig00000186,tig00000223,tig00000225,tig00000251,tig00000255,tig00000260,tig00000270,tig00000274,tig00000322,tig00000342,tig00000347,tig00000795,tig00000796,tig00000797
+
+
+#####调整Bfra contig order
+perl combineTABwith.pl Bfra.bed 1 Bfra_old_new.txt 1 | awk '{print $8"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6}' >Bfra.bed_replace
+Bfra.bed is main file and can have multiple id. Bfra_old_new.txt is the old to new ID match file.
+
+###
