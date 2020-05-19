@@ -12,7 +12,7 @@
 c Bci_ensemble.gff| sed "s#gene:##g;s#transcript:##g;s#CDS:##g;s#Bcin01p#Bcin01g#" >Bci.gff
 c Bfra_R1V1.fa.all_no_seq.modified.sorted.gff| sed "s#-RA:cds##g;s#-RA##g;" >Bfra.gff
 
-####do jcvi
+####do jcvi (https://github.com/tanghaibao/jcvi)
 ```
  ~/miniconda3/bin/python -m jcvi.formats.gff bed --type=mRNA Bfra.gff -o Bfra.bed
  ~/miniconda3/bin/python -m jcvi.formats.gff bed --type=mRNA Bcin.gff -o Bcin.bed
