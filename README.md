@@ -19,7 +19,7 @@
 #### *4: Mycelia transcriptome: RNAseq data  
 
 ## 1. De Novo Repeat Identification
-### 构建数据库
+### Build database
 ```
 #!/bin/bash
 #SBATCH -n 16
@@ -30,7 +30,7 @@ BuildDatabase -name Bfra ../Bfra_R1V1.fa
 ### run RepeatModeler###############################################################
 RepeatModeler -database Bfra -pa 16 -LTRStruct 1>repeatmodeler2.o 2>repeatmodeler2.e
 ```
-### 运行 RepeatMasker
+### Run RepeatMasker
 ```
 RepeatMasker -pa 16 -s -lib /home/ywu/Xiaolab/Botrytis/Maker/RepeatModeler2/Bfra-families.fa Bfra_R1V1.fa >repeatmasker.log 2>&1
 #####soft mask + no masking of low complexity
@@ -39,7 +39,7 @@ RepeatMasker  -pa 8 -s -lib /home/ywu/Xiaolab/Botrytis/Maker/RepeatModeler2/Bfra
 RepeatMasker  -pa 8 -s -lib /home/ywu/Xiaolab/Botrytis/Maker/RepeatModeler2/Bfra-families.fa -xsmall Bfra_R1V1.fa >repeatmasker.log 2>&1
 ```
 
-# 生成RepeatLandscape
+#  Make RepeatLandscape
 /pub/software/RepeatMasker/util/calcDivergenceFromAlign.pl -s sesame.divsum test_data/genome.fasta.cat
 perl /pub/software/RepeatMasker/util/createRepeatLandscape.pl -div sesame.divsum -g 18577337 > sesame.html
 
